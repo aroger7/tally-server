@@ -21,7 +21,7 @@
     "express": "^4.16.4",
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
-    "mongoose": "^5.4.1",
+    "mongoose": "^5.7.5",
     "yup": "^0.28.0"
   },
   "devDependencies": {
