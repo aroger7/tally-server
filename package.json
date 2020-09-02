@@ -9,6 +9,7 @@
     "start": "node src/server.js",
     "start-worker:staging": "env NODE_ENV=staging node src/worker/index.js",
     "start-worker": "node src/worker/index.js",
+    "start-worker:postgres": "node src/worker/postgres/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
@@ -22,6 +23,9 @@
     "lodash.pick": "^4.4.0",
     "lodash.pickby": "^4.6.0",
     "mongoose": "^5.4.1",
+    "pg": "^8.2.1",
+    "pg-hstore": "^2.3.3",
+    "sequelize": "^5.21.10",
     "yup": "^0.28.0"
   },
   "devDependencies": {
