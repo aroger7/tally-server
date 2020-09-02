@@ -1,130 +1,36 @@
-const { subYears } = require('date-fns');
+const { subYears, startOfYear, getYear, format } = require('date-fns');
 
-const AppMonth = require('../models/AppMonth')
-
-exports.updateYearlyStats = async () => {
-  console.log('updating yearly stats');
+module.exports = async ({ sequelize }) => {  
   const now = new Date();
-  const lastYear = subYears(now, 1);
+  const sqlNow = format(now, 'yyyy-MM-dd HH:mm:ss');
+  const thisYearStart = startOfYear(now);
+  const lastYearStart = startOfYear(subYears(thisYearStart, 1));
+  const thisYearYear = getYear(thisYearStart);
+  const lastYearYear = getYear(lastYearStart);
 
-  await AppMonth.aggregate([
-    {
-      $match: {
-        $expr: {
-          $and: [
-            {
-              $gte: [
-                {
-                  $dateFromParts: {
-                    year: '$year',
-                    month: '$month'
-                  }
-                },
-                {
-                  $dateFromParts: {
-                    year: { $year: lastYear }
-                  }
-                }
-              ]
-            },
-            {
-              $lte: [
-                {
-                  $dateFromParts: {
-                    year: '$year',
-                    month: '$month'
-                  }
-                },
-                {
-                  $dateFromParts: {
-                    year: { $year: now },
-                    month: { $month: now },
-                    day: { $dayOfMonth: now }
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      }
-    },
-    {
-      $group: {
-        _id: '$appId',
-        months: { $push: '$$ROOT' }
-      }
-    },
-    {
-      $addFields: {
-        lastMonths: {
-          $filter: {
-            input: '$months',
-            cond: {
-              $eq: ['$$this.year', { $year: lastYear }]
-            }
-          }
-        },
-        months: {
-          $filter: {
-            input: '$months',
-            cond: {
-              $eq: ['$$this.year', { $year: now }]
-            }
-          }
-        }
-      }
-    },
-    {
-      $addFields: {
-        lastAverage: {
-          $avg: {
-            $map: {
-              input: '$lastMonths',
-              in: '$$this.average'
-            }
-          }
-        }
-      }
-    },
-    {
-      $addFields: {
-        appId: '$_id',
-        year: { $year: now },
-        average: {
-          $avg: {
-            $map: {
-              input: '$months',
-              in: '$$this.average'
-            }
-          }
-        },
-        peak: {
-          $max: {
-            $map: {
-              input: '$months',
-              in: '$$this.peak'
-            }
-          }
-        }
-      }
-    },
-    {
-      $addFields: {
-        gain: { $subtract: ['$average', '$lastAverage'] }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        lastAverage: 0,
-        lastMonths: 0,
-        months: 0
-      }
-    },
-    {
-      $merge: { into: 'appyears', on: ['appId', 'year']}
-    }
-  ]).allowDiskUse(true);
-
-  console.log('finished updating yearly stats');
-};
+  console.log('updating yearly stats');
+  await sequelize.query(`
+    INSERT INTO app_years (app_id, year, average, peak, gain, percent_gain, created_at, updated_at)
+      SELECT
+        app_months.app_id AS app_id,
+        ${thisYearYear} AS year,
+        COALESCE(AVG(app_months.average), 0) AS average,
+        COALESCE(MAX(app_months.peak), 0) AS peak,
+        COALESCE(AVG(app_months.average), 0) - COALESCE(app_years.average, 0) AS gain,
+        CASE app_years.average WHEN 0 THEN NULL ELSE 100 * (COALESCE(AVG(app_months.average), 0) - app_years.average) / app_years.average END AS percent_gain,
+        '${sqlNow}' AS created_at,
+        '${sqlNow}' AS updated_at
+      FROM app_months
+      FULL JOIN app_years
+        ON app_years.app_id=app_months.app_id AND app_years.year=${lastYearYear}
+      WHERE app_months.year=${thisYearYear}
+      GROUP BY app_months.app_id, app_years.average
+    ON CONFLICT (app_id, year) DO UPDATE SET
+      average=EXCLUDED.average,
+      peak=EXCLUDED.peak,
+      gain=EXCLUDED.gain,
+      percent_gain=EXCLUDED.percent_gain,
+      updated_at='${sqlNow}'
+  `);
+  console.log('yearly stats successfully updated');
+}

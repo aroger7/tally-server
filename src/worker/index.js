@@ -1,20 +1,18 @@
 require('../config');
 
 const axios = require('axios');
-const mongoose = require('mongoose');
 const https = require('https');
 const AWS = require('aws-sdk');
 
-const App = require('../models/App');
-const PlayerCount = require('../models/PlayerCount');
-const { updateDailyStats } = require('./updateDailyStats');
-const { updateMonthlyStats } = require('./updateMonthlyStats');
-const { updateYearlyStats } = require('./updateYearlyStats');
-const { updateAllTimeStats } = require('./updateAllTimeStats');
+const updateDailyStats = require('./updateDailyStats');
+const updateMonthlyStats = require('./updateMonthlyStats');
+const updateYearlyStats = require('./updateYearlyStats');
+const updateAllTimeStats = require('./updateAllTimeStats');
+const init = require('../db');
+const db = init();
 
 const REQS_PER_SECOND_MAX = 30;
 const NUM_UPDATE_LAMBDAS = 200;
-const MAX_DB_UPDATE_GROUP_SIZE = 50;
 
 const credentials = new AWS.SharedIniFileCredentials();
 AWS.config.credentials = credentials;
@@ -27,27 +25,14 @@ const getAppList = async () => {
   try {
     const res = await axios.get(
       'https://api.steampowered.com/ISteamApps/GetAppList/v2/',
+      // Adding or removing this format param this to randomly return 
+      // an empty list. Unsure why.
       { params: { format: 'json' } }
     );
     return res.data.applist.apps;
   } catch (err) {
     console.log(err);
   }
-};
-
-const updateDatabaseCount = async (appInfo, playerCount) => {
-  const { appid, name } = appInfo;
-  let app = await App.findOne({ appId: appid }).exec();
-  if (!app) {
-    app = new App({ appId: appid, name });
-    await app.save();
-  }
-
-  const newPlayerCount = new PlayerCount({
-    appId: app._id,
-    count: playerCount || 0
-  });
-  return await newPlayerCount.save();
 };
 
 const getPlayerCounts = (apps) => {
@@ -124,50 +109,39 @@ const runUpdate = async (appList, retries = 10) => {
 };
 
 const updateDatabaseCounts = async (playerCounts) => {
-  return new Promise((resolve, reject) => {
-    const result = [];
-    const apps = playerCounts.apps.concat(playerCounts.errorsByCode[404]);
-    const next = () => {
-      if (apps.length === 0) {
-        resolve(result);
-      } else {
-        const tasks = apps
-          .splice(0, MAX_DB_UPDATE_GROUP_SIZE)
-          .map(({ count, ...appInfo }) => updateDatabaseCount(appInfo, count))
-        Promise.all(tasks)
-          .then((docs) => {
-            result.push(...docs);
-            console.log(`${result.length} of ${apps.length} counts updated`)
-            next();
-          })
-          .catch((err) => {
-            console.log(`some counts were rejected: ${err.message}`);
-            reject(err);
-          })
-      }
-    }
-    
-    next();
-  });
+  const items = playerCounts.apps.concat(playerCounts.errorsByCode[404] || []);
+  const newApps = items.map(({ appid: id, name }) => ({ id, name }));
+  const newCounts = items.map(({ count, appid: appId }) => ({ count, appId }));
+
+  try {
+    console.log('updating apps');
+    await db.models.App.bulkCreate(newApps, { ignoreDuplicates: true });
+    console.log('apps successfully updated');
+    console.log('creating counts');
+    await db.models.PlayerCount.bulkCreate(newCounts);
+    console.log('counts successfully created');
+  } catch(err) {
+    console.log(`some counts were rejected: ${err.message}`);
+    // reject(err);
+  }
 }
 
 const start = async () => {
   console.log(process.env.NODE_ENV);
   const startTime = Date.now();
   try {
-    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, socketTimeoutMS: 20 * 60 * 1000 });
-    const appList = (await getAppList()).slice(0, 500);
+    const appList = await getAppList();
     const playerCounts = await runUpdate(appList);
     await updateDatabaseCounts(playerCounts);
-    await updateDailyStats();
-    await updateMonthlyStats();
-    await updateYearlyStats();
-    await updateAllTimeStats();
+    await updateDailyStats(db);
+    await updateMonthlyStats(db);
+    await updateYearlyStats(db);
+    await updateAllTimeStats(db);    
     console.log(`done in ${Date.now() - startTime}ms`);
   } catch (e) {
     console.log(e.message);
   } finally {
-    mongoose.disconnect();
+    db.sequelize.close();
   }
 };
 
