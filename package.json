@@ -9,7 +9,6 @@
     "start": "node src/server.js",
     "start-worker:staging": "env NODE_ENV=staging node src/worker/index.js",
     "start-worker": "node src/worker/index.js",
-    "start-worker:postgres": "node src/worker/postgres/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
