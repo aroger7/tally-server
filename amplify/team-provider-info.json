@@ -22,6 +22,14 @@
                 }
               ],
               "hash": "NIjo0kmhyfo1ru5ID8KWSqgoX+M4VK7OsYXbabXa+xQ="
+            },
+            "2": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "ibL6GIcmY0aJOhLWVcarQrq4ZaeoDD77Kx2aRKYg03U="
             }
           }
         }

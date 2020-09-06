@@ -4,7 +4,7 @@
 Amplify Params - DO NOT EDIT */'use strict';
 const axios = require('axios');
 
-module.exports.getPlayerCounts = (event, context, callback) => {
+module.exports.handler = (event, context, callback) => {
   console.log(`reqs per second: ${event.reqsPerSecond}`)
   const { apps, reqsPerSecond = 20 } = event;
   const queued = apps.concat();
