@@ -11,6 +11,27 @@
           "attributes": [
             "Arn"
           ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
         }
       ]
     },
@@ -43,6 +64,20 @@
           "resourceName": "TallyGetPlayerCountsFunction",
           "attributes": [
             "Name"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
           ]
         },
         {

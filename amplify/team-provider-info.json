@@ -30,6 +30,22 @@
                 }
               ],
               "hash": "ibL6GIcmY0aJOhLWVcarQrq4ZaeoDD77Kx2aRKYg03U="
+            },
+            "3": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "C7QJ+11FA+pV2vaO4v3wV50THP0q6jn47UH3HL4kAkQ="
+            },
+            "4": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "Ru9cPDCtaYNypJe2pu/7eF4iQbXHyEUkEBqmL0IKGpE="
             }
           }
         }
