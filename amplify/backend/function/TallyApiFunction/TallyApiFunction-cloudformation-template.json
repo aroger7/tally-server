@@ -71,13 +71,13 @@
         "Runtime": "nodejs12.x",
         "Layers": [
           {
-            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:TallyDbResources-dev:1"
+            "Fn::Sub": "arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:layer:TallyDbResources-dev:4"
           }
         ],
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-tally-dev-160645-deployment",
-          "S3Key": "amplify-builds/TallyApiFunction-416663375431584c4e58-build.zip"
+          "S3Key": "amplify-builds/TallyApiFunction-576a4d55487846486a74-build.zip"
         }
       }
     },
