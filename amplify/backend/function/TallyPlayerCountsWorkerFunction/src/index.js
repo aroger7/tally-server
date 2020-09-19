@@ -1,15 +1,20 @@
-// require('../config');
+const config = require('./config');
 
 const axios = require('axios');
 const https = require('https');
 const AWS = require('aws-sdk');
+const middy = require('@middy/core');
+const secretsManager = require('@middy/secrets-manager');
 
+const insertApps = require('./insertApps');
+const insertCounts = require('./insertCounts');
 const updateDailyStats = require('./updateDailyStats');
 const updateMonthlyStats = require('./updateMonthlyStats');
 const updateYearlyStats = require('./updateYearlyStats');
 const updateAllTimeStats = require('./updateAllTimeStats');
-const init = require('/opt/db');
-const db = init();
+
+const initDb = require(process.env.ENV ? '/opt/db' : '../../TallyDbResources/opt/db');
+let db = null;
 
 const REQS_PER_SECOND_MAX = 30;
 const NUM_UPDATE_LAMBDAS = 200;
@@ -32,7 +37,14 @@ const getAppList = async () => {
       // an empty list. Unsure why.
       { params: { format: 'json' } }
     );
-    return res.data.applist.apps;
+    const appsById = res.data.applist.apps.reduce((acc, curr) => {
+      acc[curr.appid] = curr;
+      return acc;
+    }, {});
+    const apps = Object
+      .keys(appsById)
+      .map(appId => appsById[appId]);
+    return apps;
   } catch (err) {
     console.log(err);
   }
@@ -44,17 +56,24 @@ const getPlayerCounts = (apps) => {
   appGroups = appGroups.map((appGroup, index) => apps.slice(index * groupSize, (index * groupSize) + groupSize));
   const appCounts = [];
   const errorsByCode = { count: 0 };
+  const badAppGroup = appGroups.find(appGroup => appGroup === undefined);
+  if (badAppGroup) {
+    console.log(badAppGroup);
+    throw new Error('Something is undefined');
+  }
 
   const lambda = new AWS.Lambda({ httpOptions: { agent }});
   return Promise.all(appGroups
-    .map(appGroup => lambda.invoke({
-      FunctionName: process.env.GET_PLAYER_COUNTS_FUNCTION_NAME,
-      Payload: JSON.stringify({ 
-        apps: appGroup,
-        reqsPerSecond: REQS_PER_SECOND_MAX
+    .map(appGroup => {
+      return lambda.invoke({
+        FunctionName: config.GET_PLAYER_COUNTS_FUNCTION_NAME,
+        Payload: JSON.stringify({ 
+          apps: appGroup,
+          reqsPerSecond: REQS_PER_SECOND_MAX
+        })
       })
-    })
-    .promise()
+      .promise()
+    }
   ))
     .then((responses) => {
       responses.map(response => JSON.parse(response.Payload))
@@ -83,12 +102,14 @@ const getPlayerCounts = (apps) => {
       return { apps: appCounts, errorsByCode };
     })
     .catch((err) => {
-      console.log(err.message);
+      console.log('here');
+      console.log(err);
     });
 };
 
 const runUpdate = async (appList, retries = 10) => {
-  const { apps, errorsByCode } = await getPlayerCounts(appList);
+  const playerCounts = await getPlayerCounts(appList);
+  const { apps, errorsByCode } = playerCounts;
   const retryCodes = [403, 429];
   const retryErrors = retryCodes
     .map(code => errorsByCode[code] || [])
@@ -112,28 +133,25 @@ const runUpdate = async (appList, retries = 10) => {
 };
 
 const updateDatabaseCounts = async (playerCounts) => {
-  const items = playerCounts.apps.concat(playerCounts.errorsByCode[404] || []);
-  const newApps = items.map(({ appid: id, name }) => ({ id, name }));
-  const newCounts = items.map(({ count, appid: appId }) => ({ count, appId }));
-
   try {
-    console.log('updating apps');
-    await db.models.App.bulkCreate(newApps, { ignoreDuplicates: true });
-    console.log('apps successfully updated');
-    console.log('creating counts');
-    await db.models.PlayerCount.bulkCreate(newCounts);
-    console.log('counts successfully created');
-  } catch(err) {
-    console.log(`some counts were rejected: ${err.message}`);
-    // reject(err);
-  }
-}
+    const items = playerCounts.apps.concat(playerCounts.errorsByCode[404] || []);
+    const newApps =  items.map(({ appid: id, name, count: current }) => ({ id, name, current }));
+    const newCounts = items.map(({ count, appid: appId }) => ({ count, appId }));
 
-const start = async () => {
-  console.log(process.env.NODE_ENV);
+    await insertApps(db, newApps);
+    await insertCounts(db, newCounts);
+  } catch(err) {
+    console.log('could not update apps and counts!');
+    throw err;
+  }
+};
+
+const start = async (event, context) => {
   const startTime = Date.now();
   try {
-    const appList = await getAppList();
+    const { host, username, password } = context.DB_CREDENTIALS;
+    db = await initDb('postgres', username, password, { host });
+    const appList = (await getAppList()).slice(0);
     const playerCounts = await runUpdate(appList);
     await updateDatabaseCounts(playerCounts);
     await updateDailyStats(db);
@@ -144,12 +162,21 @@ const start = async () => {
   } catch (e) {
     console.log(e.message);
   } finally {
-    if (!process.env.ENV) {
-      db.sequelize.close();
-    }
+    db.sequelize.close();
+    return { statusCode: '200' };
   }
 };
 
-exports.handler = async (event, context, callback) => {
-  await start();
+const handler = middy(start)
+  .use(secretsManager({
+    cache: true,
+    secrets: {
+      DB_CREDENTIALS: config.DB_SECRET_NAME
+    }
+  }));
+
+if (!process.env.ENV) {
+  handler({}, {});
 }
+
+exports.handler = handler;
