@@ -1,0 +1,63 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tally-dev-160645-authRole",
+      "UnauthRoleArn": "arn:aws:iam::811010540363:role/amplify-tally-dev-160645-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::811010540363:role/amplify-tally-dev-160645-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-tally-dev-160645-deployment",
+      "UnauthRoleName": "amplify-tally-dev-160645-unauthRole",
+      "StackName": "amplify-tally-dev-160645",
+      "StackId": "arn:aws:cloudformation:us-east-1:811010540363:stack/amplify-tally-dev-160645/7bc28ce0-f07c-11ea-9dd0-1225390e8313",
+      "AmplifyAppId": "d2hkw2qatkbyaz"
+    },
+    "nonCFNdata": {
+      "function": {
+        "TallyDbResources": {
+          "layerVersionMap": {
+            "1": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "NIjo0kmhyfo1ru5ID8KWSqgoX+M4VK7OsYXbabXa+xQ="
+            },
+            "2": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "ibL6GIcmY0aJOhLWVcarQrq4ZaeoDD77Kx2aRKYg03U="
+            },
+            "3": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "C7QJ+11FA+pV2vaO4v3wV50THP0q6jn47UH3HL4kAkQ="
+            },
+            "4": {
+              "permissions": [
+                {
+                  "type": "private"
+                }
+              ],
+              "hash": "Ru9cPDCtaYNypJe2pu/7eF4iQbXHyEUkEBqmL0IKGpE="
+            }
+          }
+        }
+      }
+    },
+    "categories": {
+      "function": {
+        "TallyDbResources": {
+          "deploymentBucketName": "amplify-tally-dev-160645-deployment",
+          "s3Key": "amplify-builds/TallyDbResources-build.zip"
+        }
+      }
+    }
+  }
+}

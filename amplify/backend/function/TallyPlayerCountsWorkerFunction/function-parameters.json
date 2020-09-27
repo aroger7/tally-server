@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "function": {
+      "TallyGetPlayerCountsFunction": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [
+    {
+      "type": "ProjectLayer",
+      "resourceName": "TallyDbResources",
+      "version": 4
+    }
+  ]
+}

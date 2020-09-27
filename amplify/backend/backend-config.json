@@ -1,0 +1,116 @@
+{
+  "function": {
+    "TallyApiFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "TallyGetPlayerCountsFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    },
+    "TallyDbResources": {
+      "providerPlugin": "awscloudformation",
+      "service": "LambdaLayer",
+      "build": true
+    },
+    "TallyPlayerCountsWorkerFunction": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "TallyGetPlayerCountsFunction",
+          "attributes": [
+            "Name"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "TallyDbResources",
+          "attributes": [
+            "Arn"
+          ]
+        }
+      ]
+    }
+  },
+  "api": {
+    "TallyApi": {
+      "service": "API Gateway",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "TallyApiFunction",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        }
+      ]
+    }
+  }
+}

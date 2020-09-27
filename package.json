@@ -7,24 +7,19 @@
     "staging": "env NODE_ENV=staging nodemon src/server.js",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "start-worker:staging": "env NODE_ENV=staging node src/worker/index.js",
-    "start-worker": "node src/worker/index.js",
+    "start:server": "nodemon amplify/backend/function/TallyApiFunction/src/index.js",
+    "start:worker": "node amplify/backend/function/TallyPlayerCountsWorkerFunction/src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.524.0",
-    "axios": "^0.18.0",
-    "cors": "^2.8.5",
+    "axios": "^0.18.1",
     "date-fns": "^2.8.1",
-    "express": "^4.16.4",
-    "lodash.pick": "^4.4.0",
-    "lodash.pickby": "^4.6.0",
-    "mongoose": "^5.4.1",
     "yup": "^0.28.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.4"
   }
 }
