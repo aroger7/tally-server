@@ -1,12 +1,11 @@
 {
     "paths": [
         {
-            "name": "/api",
+            "name": "/graphql",
             "lambdaFunction": "TallyApiFunction",
             "privacy": {
                 "open": true
-            },
-            "policyResourceName": "/api"
+            }
         }
     ],
     "resourceName": "TallyApi",
@@ -31,5 +30,6 @@
                 "Arn"
             ]
         }
-    ]
+    ],
+    "uuid": "99597997"
 }

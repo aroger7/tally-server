@@ -77,7 +77,7 @@
         "Timeout": "25",
         "Code": {
           "S3Bucket": "amplify-tally-dev-160645-deployment",
-          "S3Key": "amplify-builds/TallyApiFunction-576a4d55487846486a74-build.zip"
+          "S3Key": "amplify-builds/TallyApiFunction-4d355665484759574964-build.zip"
         }
       }
     },
@@ -135,6 +135,13 @@
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "secretsManager:GetSecretValue"
+              ],
+              "Resource": "*"
+            },
             {
               "Effect": "Allow",
               "Action": [
