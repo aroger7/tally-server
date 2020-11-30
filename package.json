@@ -20,6 +20,7 @@
     "yup": "^0.28.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "serverless-latest-layer-version": "^2.1.1"
   }
 }

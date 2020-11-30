@@ -1,0 +1,35 @@
+plugins:
+  - serverless-offline
+  - serverless-latest-layer-version
+
+service: update-player-counts-service
+app: tally-backend
+org: aroger7
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'secretsmanager:GetSecretValue'
+        - 'lambda:InvokeFunction'
+      Resource: '*'
+
+custom:
+  accountId: ${file(../../config.js):getAccountId}
+  serverless-offline:
+    useDocker: true
+
+functions:
+  updatePlayerCounts:
+    handler: index.handler
+    name: ${self:provider.stage}-update-player-counts-function
+    memorySize: 512
+    timeout: 460
+    environment:
+      ORM_LAYER_PATH: /opt/db
+    layers:
+      - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
