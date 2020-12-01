@@ -1,0 +1,48 @@
+plugins:
+  - serverless-latest-layer-version
+  - serverless-offline
+
+service: count-update-service
+app: tally-backend
+org: aroger7
+
+frameworkVersion: '2'
+
+custom:
+  accountId: ${file(../../config.js):getAccountId}
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'secretsmanager:GetSecretValue'
+        - 'lambda:InvokeFunction'
+      Resource: '*'
+
+functions:
+  updatePlayerCounts:
+    handler: ./update-player-counts-function/index.handler
+    name: ${self:provider.stage}-update-player-counts-function
+    memorySize: 512
+    timeout: 460
+    environment:
+      ORM_LAYER_PATH: /opt/db
+    layers:
+      - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
+  
+  mockSteamApi:
+    handler: ./mock-steam-api/index.handler
+    events:
+      - http:
+          path: /{path}
+          method: GET
+          cors: true
+          private: false
+    name: ${self:provider.stage}-mock-steam-api
+
+  getBatchCounts:
+    handler: ./get-batch-counts-function/index.handler
+    name: ${self:provider.stage}-get-batch-counts-function
+    timeout: 120

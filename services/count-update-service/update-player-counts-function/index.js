@@ -15,9 +15,8 @@ const updateYearlyStats = require('./updateYearlyStats');
 const updateAllTimeStats = require('./updateAllTimeStats');
 
 const initDb = require(!process.env.IS_OFFLINE
-  ? process.env.ORM_LAYER_PATH 
-  : '../../layers/orm-layer/nodejs/db'
-);
+  ? process.env.ORM_LAYER_PATH
+  : '../../../layers/orm-layer/nodejs/db');
 let db = null;
 
 const REQS_PER_SECOND_MAX = 30;
@@ -69,7 +68,7 @@ const getPlayerCounts = (apps) => {
   const lambdaConfig = { httpOptions: { agent } };
   if (process.env.IS_OFFLINE) {
     console.log('running offline');
-    lambdaConfig.endpoint = 'http://host.docker.internal:3002';
+    lambdaConfig.endpoint = new AWS.Endpoint('http://localhost:3002');
     lambdaConfig.region = 'us-east-1';
   }
 
@@ -168,7 +167,18 @@ const start = async (event, context) => {
     } = context.DB_CREDENTIALS || {};
     db = await initDb('postgres', username, password, { host });
 
-    const appList = (await getAppList()).slice(0, 100);
+    // const dns = require('dns');
+
+    // dns.resolve('localhost', (err, address, family) => {
+    //   if (err) {
+    //     return console.log(err);
+    //   }
+
+    //   console.log(address);
+    //   console.log(family);
+    // })
+
+    const appList = (await getAppList()).slice(0, config.APP_LIST_END);
     const playerCounts = await runUpdate(appList);
     await updateDatabaseCounts(playerCounts);
     await updateDailyStats(db);

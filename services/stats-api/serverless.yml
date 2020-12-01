@@ -18,11 +18,7 @@ provider:
       Resource: '*'
 
 custom:
-  accountId: ${file(../../config.js):getAccountId}
-  serverless-offline:
-    # host: 0.0.0.0
-    httpPort: 3000
-    useDocker: true
+  accountId: ${file(../../config.js):getAccountId}    
 
 functions:
   statsApi:
@@ -35,4 +31,4 @@ functions:
           cors: true
           private: false
     layers:
-      - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:2
+      - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
