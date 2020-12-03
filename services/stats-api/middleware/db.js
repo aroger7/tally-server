@@ -19,11 +19,12 @@ exports.getDatabase = (config) => {
           password || 'password12345', 
           {
             host: host || 'host.docker.internal',
-            dialect: 'postgres'
+            dialect: 'postgres',
+            schema: 'test'
           });
       }
 
-      handler.context.db = db;      
+      handler.context.db = db;
     }
   })
 }

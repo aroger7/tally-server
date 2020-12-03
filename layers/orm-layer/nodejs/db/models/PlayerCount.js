@@ -8,7 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         unique: false,
         fields: ['count']
       }
-    ]
+    ],
+    timestamps: true,
+    updatedAt: false
   });
 
   PlayerCount.associate = models => {

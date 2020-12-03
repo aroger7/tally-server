@@ -2,55 +2,49 @@ const middy = require('@middy/core');
 const AWS = require('aws-sdk');
 const secretsManager = require('@middy/secrets-manager');
 const cors = require('@middy/http-cors');
+const { ApolloServer, makeExecutableSchema } = require('apollo-server-lambda');
+const { range, pattern, ValidateDirectiveVisitor } = require('@profusion/apollo-validation-directives');
+const { resolver } = require('graphql-sequelize');
+const { createContext, EXPECTED_OPTIONS_KEY } = require('dataloader-sequelize');
+
+const { getDatabase } = require('./middleware/db');
 const config = require('./config');
+const typeDefs = require('./typeDefs');
+const resolvers = require('./resolvers');
 
 AWS.config.update({ region: 'us-east-1' });
 
-const { ApolloServer, gql } = require('apollo-server-lambda');
-const { getDatabase } = require('./middleware/db');
-
-// Construct a schema, using GraphQL schema language
-const typeDefs = gql`
-  type Query {
-    hello: [App]
-  }
-
-  type App {
-    id: Int!
-    name: String!,
-    current: Int!,
-    average: Float!,
-    average24Hours: Float!,
-    peak: Int!,
-    peak24Hours: Int!
-  }
-`;
-
-// Provide resolver functions for your schema fields
-const resolvers = {
-  Query: {
-    hello: async (parent, args, context) => {
-      const results = await context.db.models.App.findAll({ limit: 20 });
-      return results;
-      // return 'Hello world!';
-    },
-  },
-};
-
-const server = new ApolloServer({
-  typeDefs,
+const schema = makeExecutableSchema({
+  typeDefs: [
+    ...typeDefs,
+    ...ValidateDirectiveVisitor.getMissingCommonTypeDefs(),
+    ...range.getTypeDefs(),
+    ...pattern.getTypeDefs()
+  ],
   resolvers,
+  resolverValidationOptions: {
+    requireResolversForResolveType: false
+  },
+  schemaDirectives: { range, pattern }
+})
+
+ValidateDirectiveVisitor.addValidationResolversToSchema(schema);
+
+const server = new ApolloServer({ 
+  schema,
   context: ({ event, context }) => {
     const { db } = context;
-    return { db };
+    const dataloaderContext = createContext(db.sequelize);
+    resolver.contextToOptions = {
+      dataloaderContext: [EXPECTED_OPTIONS_KEY]
+    };
+    return {
+      ...context,
+      dataloaderContext
+    };
   },
-  // By default, the GraphQL Playground interface and GraphQL introspection
-  // is disabled in "production" (i.e. when `process.env.NODE_ENV` is `production`).
-  //
-  // If you'd like to have GraphQL Playground and introspection enabled in production,
-  // the `playground` and `introspection` options must be set explicitly to `true`.
   playground: true,
-  introspection: true,
+  introspection: true
 });
 
 const secrets = {};
