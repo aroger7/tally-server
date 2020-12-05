@@ -18,9 +18,8 @@
     "yup": "^0.28.0"
   },
   "devDependencies": {
-    "date-fns": "^2.8.1",
-    "namor": "^2.0.2",
     "nodemon": "^2.0.4",
-    "serverless-latest-layer-version": "^2.1.1"
+    "serverless-latest-layer-version": "^2.1.1",
+    "yargs": "^16.1.1"
   }
 }
