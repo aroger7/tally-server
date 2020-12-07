@@ -33,7 +33,7 @@ const argv = require('yargs')
   .option('schema', {
     alias: 's',
     demandOption: true,
-    default: 'public',
+    default: 'test',
     describe: 'schema name to generate data in',
     type: 'string'
   })
