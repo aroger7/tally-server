@@ -9,13 +9,10 @@ const app = {
     lastWeekCounts: createDbResolver((db) => () => db.models.App.associations.playerCounts, {
       before: (findOptions, _, context) => {
         const { Sequelize: { Op } = {} } = context.db;
-        const endDate = new Date();
-        const startDate = subDays(endDate, 7);
 
         findOptions.where = {
           createdAt: {
-            [Op.gte]: startDate,
-            [Op.lte]: endDate
+            [Op.gte]: subDays(new Date(), 7)
           }
         };
         findOptions.order = [['createdAt', 'DESC']];
