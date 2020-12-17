@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     indexes: [
       {
         unique: false,
-        fields: ['count']
+        fields: ['app_id', 'created_at']
       }
     ],
     timestamps: true,
