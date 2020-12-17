@@ -6,6 +6,7 @@ const https = require('https');
 const AWS = require('aws-sdk');
 const middy = require('@middy/core');
 const secretsManager = require('@middy/secrets-manager');
+const { startOfHour } = require('date-fns');
 
 const insertApps = require('./insertApps');
 const insertCounts = require('./insertCounts');
@@ -23,6 +24,8 @@ const REQS_PER_SECOND_MAX = 30;
 const NUM_UPDATE_LAMBDAS = 200;
 
 AWS.config.update({ region: 'us-east-1' });
+
+const updateTime = startOfHour(new Date());
 
 // Increase the max sockets so Lambda will fulfill more requests in parallel
 const agentConfig = { maxSocket: 1000 };
@@ -147,7 +150,7 @@ const updateDatabaseCounts = async (playerCounts) => {
   try {
     const items = playerCounts.apps.concat(playerCounts.errorsByCode[404] || []);
     const newApps =  items.map(({ appid: id, name, count: current }) => ({ id, name, current }));
-    const newCounts = items.map(({ count, appid: appId }) => ({ count, appId }));
+    const newCounts = items.map(({ count, appid: appId }) => ({ count, appId, createdAt: updateTime }));
 
     await insertApps(db, newApps);
     await insertCounts(db, newCounts);
@@ -166,17 +169,6 @@ const start = async (event, context) => {
       password = 'password12345' 
     } = context.DB_CREDENTIALS || {};
     db = await initDb('postgres', username, password, { host });
-
-    // const dns = require('dns');
-
-    // dns.resolve('localhost', (err, address, family) => {
-    //   if (err) {
-    //     return console.log(err);
-    //   }
-
-    //   console.log(address);
-    //   console.log(family);
-    // })
 
     const appList = (await getAppList()).slice(0, config.APP_LIST_END);
     const playerCounts = await runUpdate(appList);
