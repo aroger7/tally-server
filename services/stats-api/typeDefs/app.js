@@ -14,7 +14,7 @@ const app = gql`
   }
 
   extend type Query {
-    getApp(id: Int!): App!
+    getApp(id: Int!): App
   }
 `;
 
