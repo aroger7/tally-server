@@ -1,9 +1,0 @@
-{
-  "lambdaLayers": [
-    {
-      "type": "ProjectLayer",
-      "resourceName": "TallyDbResources",
-      "version": 4
-    }
-  ]
-}
