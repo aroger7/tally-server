@@ -19,8 +19,7 @@ exports.getDatabase = (config) => {
           password || 'password12345', 
           {
             host: host || 'host.docker.internal',
-            dialect: 'postgres',
-            schema: 'test'
+            dialect: 'postgres'
           });
       }
 
