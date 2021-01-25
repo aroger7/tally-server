@@ -1,18 +1,25 @@
 {
-  "name": "my-app",
+  "name": "tali-client",
   "version": "0.1.0",
   "description": "",
   "scripts": {
-    "start": "parcel index.html",
+    "start": "parcel index.html --hmr-port 9200",
     "build": "parcel build index.html"
   },
   "license": "MIT",
   "dependencies": {
     "@apollo/client": "^3.3.6",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "components": "^0.1.0",
     "graphql": "^15.4.0",
+    "normalize.css": "^8.0.1",
+    "prop-types": "^15.7.2",
     "react": "^16.5.2",
     "react-chartjs-2": "^2.7.6",
-    "react-dom": "^16.5.2"
+    "react-dom": "^16.5.2",
+    "react-router": "^5.2.0",
+    "react-table": "^7.6.3"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -37,5 +44,9 @@
         }
       ]
     ]
+  },
+  "alias": {
+    "components": "./src/components",
+    "styles": "./src/styles"
   }
 }
