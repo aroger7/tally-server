@@ -17,9 +17,11 @@
     "prop-types": "^15.7.2",
     "react": "^16.5.2",
     "react-chartjs-2": "^2.7.6",
+    "react-content-loader": "^6.0.1",
     "react-dom": "^16.5.2",
     "react-router": "^5.2.0",
-    "react-table": "^7.6.3"
+    "react-table": "^7.6.3",
+    "recharts": "^2.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.6.4",
@@ -47,6 +49,7 @@
   },
   "alias": {
     "components": "./src/components",
+    "hooks": "./src/hooks",
     "styles": "./src/styles"
   }
 }
