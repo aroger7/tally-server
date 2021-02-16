@@ -1,27 +1,12 @@
 import React from 'react';
-import { useQuery, gql } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 
-import LoadingCell from 'components/LoadingCell';
-import SectionTitle from 'components/SectionTitle';
-import SimpleTable from 'components/SimpleTable';
+import LoadingCell from 'src/components/LoadingCell';
+import SectionTitle from 'src/components/SectionTitle';
+import SimpleTable from 'src/components/SimpleTable';
 
+import { GET_TOP_TEN_APPS_QUERY } from './queries';
 import * as Styles from './styles';
-
-const GET_TOP_TEN_APPS = gql`
-  query GetTopTenApps {
-    getApps(limit: 10) {
-      totalCount,
-      filteredCount
-      pageSize,
-      page
-      apps {
-        id,
-        name,
-        current
-      }
-    }
-  }
-`;
 
 const columns = [
   {
@@ -55,8 +40,7 @@ const columns = [
 ];
 
 const MainStats = () => {
-  const { loading, error, data } = useQuery(GET_TOP_TEN_APPS);
-
+  const { loading, error, data } = useQuery(GET_TOP_TEN_APPS_QUERY);
   return (
     <Styles.MainStats>
       <SectionTitle>Right Now</SectionTitle>

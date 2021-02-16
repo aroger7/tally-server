@@ -1,15 +1,21 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import LoadingCell from './LoadingCell';
 
 describe('LoadingCell', () => {
-    const defaultProps = {};
+    const value = 'test';
+    const defaultProps = { value };
 
-    it('should render', () => {
-        const props = {...defaultProps};
-        const { asFragment, queryByText } = render(<LoadingCell {...props} />);
+    it('should render a value', () => {
+        const { asFragment } = render(<LoadingCell {...defaultProps} />)
 
         expect(asFragment()).toMatchSnapshot();
-        expect(queryByText('LoadingCell')).toBeTruthy();
+        expect(screen.getByText(value)).toBeInTheDocument();
+    })
+
+    it('should render a loading image', () => {
+        render(<LoadingCell {...defaultProps} isLoading />);
+
+        expect(screen.getByRole('img')).toBeInTheDocument();
     });
 });

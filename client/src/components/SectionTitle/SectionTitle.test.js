@@ -1,15 +1,12 @@
-import { render } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import React from 'react';
 import SectionTitle from './SectionTitle';
 
 describe('SectionTitle', () => {
-    const defaultProps = {};
+  it('should render text', () => {
+    const title = 'Section Title';
+    render(<SectionTitle>{title}</SectionTitle>);
 
-    it('should render', () => {
-        const props = {...defaultProps};
-        const { asFragment, queryByText } = render(<SectionTitle {...props} />);
-
-        expect(asFragment()).toMatchSnapshot();
-        expect(queryByText('SectionTitle')).toBeTruthy();
-    });
+    expect(screen.getByRole('heading', { name: new RegExp(title, 'i') })).toBeInTheDocument();
+  })
 });

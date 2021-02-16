@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { useTable } from 'react-table';
 
-import * as Table from 'components/Table';
+import * as Table from 'src/components/Table';
 
 const SimpleTable = ({ columns, data, isLoading, numLoadingRows }) => {
   const {
@@ -28,7 +28,7 @@ const SimpleTable = ({ columns, data, isLoading, numLoadingRows }) => {
                 ? { width, maxWidth: width }
                 : {};
               return (
-                <Table.TableHeaderCell {...column.getHeaderProps()} style={style} >
+                <Table.TableHeaderCell {...column.getHeaderProps()} style={style}>
                   {column.render('Header')}
                 </Table.TableHeaderCell>
               );
