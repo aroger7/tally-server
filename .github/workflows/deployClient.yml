@@ -10,7 +10,8 @@ jobs:
   run-tests:
     runs-on: ubuntu-latest
     defaults:
-      working-directory: client
+      run:
+        working-directory: client
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
