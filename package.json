@@ -4,22 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "staging": "env NODE_ENV=staging nodemon src/server.js",
     "dev": "nodemon src/server.js",
     "start": "node src/server.js",
-    "start:server": "nodemon amplify/backend/function/TallyApiFunction/src/index.js",
-    "start:worker": "node amplify/backend/function/TallyPlayerCountsWorkerFunction/src/index.js",
+    "start:stats-api": "cd services/stats-api && serverless offline start",
+    "watch:stats-api": "nodemon --exec npm run start:stats-api",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/jest": "^26.0.20",
     "aws-sdk": "^2.524.0",
     "axios": "^0.18.1",
-    "date-fns": "^2.8.1",
     "yup": "^0.28.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "serverless-latest-layer-version": "^2.1.1",
+    "yargs": "^16.1.1"
   }
 }
