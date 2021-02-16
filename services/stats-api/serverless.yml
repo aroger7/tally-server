@@ -1,0 +1,34 @@
+plugins:
+  - serverless-latest-layer-version
+  - serverless-offline
+
+service: stats-api
+app: tally-backend
+org: aroger7
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 'secretsmanager:GetSecretValue'
+      Resource: '*'
+
+custom:
+  accountId: ${file(../../config.js):getAccountId}    
+
+functions:
+  statsApi:
+    handler: index.handler
+    name: ${self:provider.stage}-stats-api-function
+    events:
+      - http:
+          path: graphql
+          method: POST
+          cors: true
+          private: false
+    layers:
+      - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
