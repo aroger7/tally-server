@@ -22,6 +22,7 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm ci
       - run: npm test
+      - run: echo ${{secrets.SERVERLESS_ACCESS_KEY}}
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
