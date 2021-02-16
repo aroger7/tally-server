@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/jest": "^26.0.20",
     "aws-sdk": "^2.524.0",
     "axios": "^0.18.1",
     "yup": "^0.28.0"
