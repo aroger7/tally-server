@@ -43,7 +43,7 @@ const MainStats = () => {
   const { loading, error, data } = useQuery(GET_TOP_TEN_APPS_QUERY);
   return (
     <Styles.MainStats>
-      <SectionTitle>Right Now</SectionTitle>
+      <SectionTitle>abc123</SectionTitle>
       <SimpleTable
         columns={columns}
         data={data && data.getApps && data.getApps.apps}
