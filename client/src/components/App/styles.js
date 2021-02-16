@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { colors, util } from 'styles';
+import { colors } from 'src/styles';
 
 export const App = styled.div`
   display: flex;

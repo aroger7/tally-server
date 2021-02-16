@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { colors } from 'styles';
+import { colors } from 'src/styles';
 
 export const SectionTitle = styled.div`
   display: block;

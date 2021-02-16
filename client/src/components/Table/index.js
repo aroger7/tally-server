@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { colors, util } from 'styles';
+import { colors, util } from 'src/styles';
 
 export const Table = styled.table`
   border-spacing: 0;
