@@ -1,0 +1,15 @@
+name: deploy-client
+on:
+  push:
+    branches:
+      - 'ci/cd'
+    paths:
+      - 'client/**'
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: npm install
+      - run: npm test
