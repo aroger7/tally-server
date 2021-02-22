@@ -24,7 +24,6 @@ jobs:
     steps:
       - name: Serverless
         uses: serverless/github-action@v2.17.1
-      - uses: actions/checkout@v2
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
