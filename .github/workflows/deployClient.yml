@@ -17,13 +17,17 @@ jobs:
       run:
         working-directory: client
     steps:
+      - name: Extract branch name
+        shell: bash
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: extract_branch
       - name: Serverless
         uses: serverless/github-action@v2.17.1
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
       - run: npm test
-      - run: pwd
+      - run: echo ${{ steps.extract_branch.outputs.branch }}
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
