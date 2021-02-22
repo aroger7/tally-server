@@ -1,0 +1,17 @@
+name: Run pull request tests
+on:
+  pull_request:
+  workflow_dispatch:
+jobs:
+  test-client:
+    name: Run clients 
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: npm ci
+      - run: npm test
+      - run: npm run build --if-present
