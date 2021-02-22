@@ -17,16 +17,16 @@ jobs:
       run:
         working-directory: client
     steps:
-      - name: Set branch
-        id: vars
-        run: echo ::set-output name=branch::${GITHUB_REF#refs/*/}
+      # - name: Set branch
+      #   id: vars
+      #   run: echo ::set-output name=branch::${GITHUB_REF#refs/*/}
       - name: Serverless
         uses: serverless/github-action@v2.17.1
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: npm ci
       - run: npm test
-      - run: echo ${{ steps.vars.outputs.head_ref }}
+      - run: echo ${GITHUB_REF#refs/heads/}
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
