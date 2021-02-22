@@ -1,6 +1,7 @@
 app: tally-client
 name: tally-client
 component: website
+org: aroger7
 
 provider:
   name: aws

@@ -1,0 +1,29 @@
+name: deploy-client
+on:
+  push:
+    branches:
+      - master
+      - dev
+    paths:
+      - 'layers/**'
+  workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: layers
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      - run: cd nodejs
+      - run: npm ci
+      - run: cd ../
+      - name: Serverless
+        uses: serverless/github-action@v2.17.1
+      - name: serverless deploy
+        uses: serverless/github-action@master
+        with:
+          args: deploy -s ${GITHUB_REF#refs/heads/}
+        env:
+          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
