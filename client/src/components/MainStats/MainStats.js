@@ -44,7 +44,6 @@ const MainStats = () => {
   return (
     <Styles.MainStats>
       <SectionTitle>Right Now</SectionTitle>
-      abc
       <SimpleTable
         columns={columns}
         data={data && data.getApps && data.getApps.apps}
