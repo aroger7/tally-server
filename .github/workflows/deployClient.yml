@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Get branch name
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
         id: vars
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
