@@ -42,7 +42,7 @@ describe('MainStats', () => {
       </MockedProvider>
     ));
 
-    expect(screen.getByRole('heading', { name: /Right Now/ })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Right Now' })).toBeInTheDocument();
   });
 
   it('should display a player count table', () => {
