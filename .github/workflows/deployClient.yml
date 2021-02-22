@@ -2,7 +2,8 @@ name: deploy-client
 on:
   push:
     branches:
-      - 'ci/cd'
+      - master
+      - dev
     paths:
       - 'client/**'
   workflow_dispatch:
@@ -10,7 +11,7 @@ defaults:
   run:
     working-directory: client
 jobs:
-  deploy-dev:
+  deploy-client:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -22,6 +23,7 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm ci
       - run: npm test
+      - run: pwd
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
