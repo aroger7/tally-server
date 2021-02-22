@@ -19,6 +19,7 @@ jobs:
       - run: npm ci
   deploy:
     runs-on: ubuntu-latest
+    needs: install-dependencies
     defaults:
       run:
         working-directory: layers
