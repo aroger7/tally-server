@@ -19,11 +19,12 @@ jobs:
       - uses: actions/setup-node@v2
       - name: Get branch name
         shell: bash
-        run: echo "::set-output name=branch::blah"
-        # id: vars
+        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+        id: env
       - run: npm ci
       - run: npm test
       - run: npm run build --if-present
+      - run: echo ${{ steps.env.outputs.branch }}
       # - name: serverless deploy
       #   uses: serverless/github-action@master
       #   with:
