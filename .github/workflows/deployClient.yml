@@ -15,10 +15,10 @@ jobs:
     name: Deploy client
     runs-on: ubuntu-latest
     steps:
-      - name: Get branch name
-        shell: bash
-        run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
-        id: vars
+      # - name: Get branch name
+      #   shell: bash
+      #   run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
+      #   id: vars
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
       - run: npm ci
@@ -27,6 +27,6 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
-          args: deploy --stage ${{ steps.vars.outputs.branch }}
+          args: deploy --stage $({GITHUB_REF##*/})
         env:
           SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
