@@ -15,12 +15,12 @@ jobs:
     name: Deploy client
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
       - name: Get branch name
         shell: bash
         run: echo "::set-output name=branch::blah"
         # id: vars
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
       - run: npm ci
       - run: npm test
       - run: npm run build --if-present
