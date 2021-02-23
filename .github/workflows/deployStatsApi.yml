@@ -26,7 +26,9 @@ jobs:
       #   id: env
       - run: npm ci
       - run: pwd
-      - run: npx serverless deploy --stage $BRANCH_NAME
+      - run: npm install -g serverless
+      - run: serverless deploy --stage $BRANCH_NAME
+      # - run: npx serverless deploy --stage $BRANCH_NAME
       # - run: npm test
       # - run: npm run build --if-present
       # - name: serverless deploy
