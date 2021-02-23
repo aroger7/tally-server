@@ -22,6 +22,7 @@
     "lodash.merge": "^4.6.2"
   },
   "devDependencies": {
+    "serverless-latest-layer-version": "^2.1.1",
     "serverless-offline": "^6.8.0"
   },
   "scripts": {
