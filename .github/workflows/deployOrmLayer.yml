@@ -9,10 +9,11 @@ on:
   workflow_dispatch:
 jobs:
   deploy:
+    name: Deploy ORM layer
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: layers
+        working-directory: layers/orm-layer
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
