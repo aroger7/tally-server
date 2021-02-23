@@ -24,7 +24,7 @@ jobs:
       #   shell: bash
       #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
       #   id: env
-      - run: npm ci
+      - run: npm i
       # - run: npm install serverless
       # - run: serverless deploy --stage $BRANCH_NAME
       - run: npx serverless deploy --stage ${{ env.BRANCH_NAME }}
