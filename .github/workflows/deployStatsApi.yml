@@ -26,7 +26,7 @@ jobs:
       #   id: env
       - run: npm ci
       - run: pwd
-        working-directory: /
+        working-directory: ./
       # - run: npm install serverless
       # - run: serverless deploy --stage $BRANCH_NAME
       - run: npx serverless deploy --stage ${{ env.BRANCH_NAME }}
