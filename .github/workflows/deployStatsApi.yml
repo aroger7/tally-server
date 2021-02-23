@@ -10,6 +10,8 @@ on:
 defaults:
   run:
     working-directory: services/stats-api
+env:
+  SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
 jobs:
   deploy:
     name: Deploy stats API
@@ -17,17 +19,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - name: Get branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: env
+      - uses: nelonoel/branch-name@v1.0.1
+      # - name: Get branch name
+      #   shell: bash
+      #   run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      #   id: env
       - run: npm ci
       - run: pwd
+      - run: npx serverless deploy --stage $BRANCH_NAME
       # - run: npm test
       # - run: npm run build --if-present
-      - name: serverless deploy
-        uses: serverless/github-action@master
-        with:
-          args: deploy --stage ${{ steps.env.outputs.branch }}
-        env:
-          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+      # - name: serverless deploy
+      #   uses: serverless/github-action@master
+      #   with:
+      #     args: deploy --stage ${{ steps.env.outputs.branch }}
+      #   env:
+      #     SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
