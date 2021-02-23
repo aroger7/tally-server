@@ -10,6 +10,8 @@ on:
 defaults:
   run:
     working-directory: services/count-update-service
+env:
+  SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
 jobs:
   deploy:
     name: Deploy count update service
@@ -17,16 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
-      - name: Get branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
-        id: env
+      - uses: nelonoel/branch-name@v1.0.1
       - run: npm ci
-      # - run: npm test
-      # - run: npm run build --if-present
-      - name: serverless deploy
-        uses: serverless/github-action@master
-        with:
-          args: deploy --stage ${{ steps.env.outputs.branch }}
-        env:
-          SERVERLESS_ACCESS_KEY: ${{ secrets.SERVERLESS_ACCESS_KEY }}
+      - run: npx serverless deploy --stage ${{ env.BRANCH_NAME }}
