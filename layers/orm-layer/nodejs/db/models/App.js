@@ -16,7 +16,5 @@ module.exports = (sequelize, DataTypes) => {
     models.App.hasMany(models.AppYear, { onDelete: 'CASCADE', allowNull: false });
   };
 
-  console.log('blah');
-
   return App;
 };

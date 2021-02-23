@@ -9,7 +9,6 @@ const app = {
     lastWeekCounts: createDbResolver((db) => () => db.models.App.associations.playerCounts, {
       before: (findOptions, _, context) => {
         const { Sequelize: { Op } = {} } = context.db;
-        console.log('blah');
 
         findOptions.where = {
           createdAt: {
