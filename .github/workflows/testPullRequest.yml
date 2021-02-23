@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
 jobs:
   test-client:
-    name: Run clients 
+    name: Run client tests
     runs-on: ubuntu-latest
     defaults:
       run:
