@@ -8,9 +8,6 @@ org: aroger7
 
 frameworkVersion: '2'
 
-custom:
-  accountId: ${file(../../config.js):getAccountId}
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -30,7 +27,7 @@ functions:
     environment:
       ORM_LAYER_PATH: /opt/db
     layers:
-      - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
+      - arn:aws:lambda:${opt:region, 'us-east-1'}:#{AWS::AccountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
     events:
       - schedule:
           rate: cron(0 0/1 * * ? *)
