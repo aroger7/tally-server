@@ -19,8 +19,10 @@
     "graphql": "^14.7.0",
     "graphql-constraint-directive": "^2.1.1",
     "graphql-iso-date": "^3.6.1",
+    "graphql-relay": "^0.6.0",
     "graphql-sequelize": "^9.4.0",
-    "lodash.merge": "^4.6.2"
+    "lodash.merge": "^4.6.2",
+    "sequelize": "^6.3.5"
   },
   "devDependencies": {
     "serverless-latest-layer-version": "^2.1.1",
