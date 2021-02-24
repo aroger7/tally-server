@@ -17,9 +17,6 @@ provider:
         - 'secretsmanager:GetSecretValue'
       Resource: '*'
 
-# custom:
-#   accountId: ${file(../../config.js):getAccountId}    
-
 functions:
   statsApi:
     handler: index.handler
@@ -31,5 +28,4 @@ functions:
           cors: true
           private: false
     layers:
-      # - arn:aws:lambda:${opt:region, 'us-east-1'}:${self:custom.accountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
       - arn:aws:lambda:${opt:region, 'us-east-1'}:#{AWS::AccountId}:layer:${opt:stage, 'dev'}-orm-layer:latest
