@@ -10,7 +10,9 @@ export const GET_TOP_TEN_APPS_QUERY = gql`
       apps {
         id,
         name,
-        current
+        current,
+        average24Hours,
+        peak24Hours
       }
     }
   }
