@@ -28,8 +28,22 @@ const columns = [
   {
     Header: 'Current Players',
     id: 'current',
-    width: 300,
+    width: 150,
     accessor: (row) => row.current && row.current.toLocaleString(),
+    Cell: LoadingCell
+  },
+  {
+    Header: '24-hr Average',
+    id: 'average24Hours',
+    width: 150,
+    accessor: ({ average24Hours }) => average24Hours && average24Hours.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+    Cell: LoadingCell
+  },
+  {
+    Header: '24-hr Peak',
+    id: 'peak24Hours',
+    width: 150,
+    accessor: ({ peak24Hours }) => peak24Hours && peak24Hours.toLocaleString(),
     Cell: LoadingCell
   },
   {
