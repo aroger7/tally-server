@@ -17,9 +17,9 @@ const App = () => {
       <Global styles={normalize} />
       <Global styles={fonts} />
       <Styles.App>
-        {/* <Styles.HeaderContainer>
+        <Styles.HeaderContainer>
           <Header />
-        </Styles.HeaderContainer> */}
+        </Styles.HeaderContainer>
         <Styles.Body>
           <MainStats />
         </Styles.Body>
