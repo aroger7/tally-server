@@ -11,4 +11,12 @@ export default css`
     display: flex;
     flex-direction: column;
   }
+
+  p {
+    margin: 0;
+  }
+
+  * { 
+    box-sizing: border-box;
+  }
 `;
