@@ -14,7 +14,6 @@ const ensureDbCreated = async (options) => {
     client = new Client({ connectionString });
     await client.connect();
     await client.query('CREATE DATABASE ' + database);
-    console.log('done');
   } catch (err) {
   } finally {
     client.end();
