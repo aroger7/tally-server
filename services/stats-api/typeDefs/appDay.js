@@ -8,7 +8,7 @@ const appDay = gql`
     day: Int!
     peak: Int!
     average: Float!
-    gain: Int!
+    gain: Float!
     percentGain: Float!
   }
 

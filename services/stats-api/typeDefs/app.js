@@ -8,9 +8,10 @@ const app = gql`
     average: Float!,
     average24Hours: Float,
     peak: Int!,
-    peak24Hours: Int!
+    peak24Hours: Int
     lastWeekCounts: [PlayerCount!]!
     dailyStats: [AppDay!]!
+    monthlyStats: [AppMonth!]!
   }
 
   extend type Query {
