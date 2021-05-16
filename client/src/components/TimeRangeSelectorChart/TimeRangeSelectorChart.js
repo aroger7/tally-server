@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { AreaChart, Area, CartesianGrid, XAxis, YAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { isValid, format, differenceInDays, subDays, startOfDay, endOfDay, addDays } from 'date-fns';
 
@@ -40,7 +40,6 @@ const TimeRangeSelectorChart = ({ data }) => {
           fontFamily="Roboto"
           tick={xAxisTickStyle}
           ticks={ticks}
-          // tickSize={5}
           opacity={0.6}
           type="number"
           interval={0}
@@ -55,7 +54,6 @@ const TimeRangeSelectorChart = ({ data }) => {
           width={75}
           axisLine={false}
           tickLine={false}
-          // allowDataOverflow={false}
           tick={yAxisTickStyle}
           tickFormatter={yAxisTickFormatter}
           color={colors.sapphire}
