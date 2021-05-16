@@ -24,6 +24,12 @@ const app = {
         findOptions.order = [['year', 'ASC'], ['month', 'ASC'], ['day', 'ASC']];
         return findOptions;
       }
+    }),
+    monthlyStats: createDbResolver((db) => () => db.models.App.associations.appMonths, {
+      before: (findOptions) => {
+        findOptions.order = [['year', 'ASC'], ['month', 'ASC']];
+        return findOptions;
+      }
     })
   }
 };
