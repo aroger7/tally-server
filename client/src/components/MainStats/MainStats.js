@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 
+import Card from 'src/components/Card';
 import LoadingCell from 'src/components/LoadingCell';
 import SectionTitle from 'src/components/SectionTitle';
 import SimpleTable from 'src/components/SimpleTable';
@@ -58,11 +59,15 @@ const MainStats = () => {
   return (
     <Styles.MainStats>
       <SectionTitle>Right Now</SectionTitle>
-      <SimpleTable
-        columns={columns}
-        data={data && data.getApps && data.getApps.apps}
-        isLoading={loading}
-      />
+      <Card>
+        <Styles.CurrentStatsTableContainer>
+          <SimpleTable
+            columns={columns}
+            data={data && data.getApps && data.getApps.apps}
+            isLoading={loading}
+          />
+        </Styles.CurrentStatsTableContainer>
+      </Card>
     </Styles.MainStats>
   )
 };
